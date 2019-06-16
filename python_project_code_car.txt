@@ -1,0 +1,123 @@
+1.Importing modules
+================================================================
+ 
+import pandas as pd
+import numpy as np
+import matplotlib as mlt
+import os
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn import neighbors
+import statsmodels.api as sm
+from sklearn.cross_validation import train_test_split
+
+2.Converting data to numeric output target variable is numeric and we have to predict the data
+===================================================================================================
+os.chdir("C:/Users/lalit mohan/Desktop/data01s2l1-20180201T150153Z-001/data01s2l1/train_cab/")
+os.getcwd()
+df_csv = pd.read_csv("train_cab.csv",encoding = "latin1")
+df_csv3 = df_csv
+
+dfs3["fare_amount"].loc[1123] = np.nan
+
+3.Correlation analysts :=
+=========================
+
+dfs3.corr(method = ("pearson"))
+
+4.Outlier Analysys :=
+===============================================
+dfs3["fare_amount"] = dfs3["fare_amount"].astype("float64")
+dfs4 = dfs3
+
+dfs4 = dfs4.drop(["pickup_latitude","dropoff_longitude","dropoff_latitude"] ,axis =1)
+for i in clans:
+    print (i)
+    q75, q25  = np.percentile(dfs4.loc[:,i], [75 ,25])
+    print (q75)
+    print  (q25)
+    iqr = q75 - q25
+    print (iqr)
+    min = q25 - (iqr*1.5)
+    max = q75 + (iqr*1.5)
+    print(min)
+    print(max)
+    
+    dfs4.loc[dfs4[i] < min,:i] = np.nan
+    dfs4.loc[dfs4[i] > max,:i] = np.nan
+
+
+for i in dfs4.loc[:,:].columns:
+    dfs4[i] = dfs4[i].fillna(dfs4[i].median())
+
+4.checking collinearity
+======================================================
+
+dfs4.corr(method = ("pearson"))
+
+
+
+5.splitting data into test and train :=
+===================================================================
+
+train, test = train_test_split(dfs4 ,test_size = 0.2)
+
+6.Linear regression Model :=
+==================================================================
+
+model = sm.OLS(train.iloc[:,0], train.iloc[:,1:2]).fit()
+
+model.summary()
+
+def MAPE(y_true ,y_pred):
+    mape = np.mean(np.abs((y_true - y_pred) / y_true))*100
+    return make
+
+prediction_LR = model.predict(test.iloc[:,1:2])
+
+z = MAPE(test.iloc[:,0], prediction_LR)
+z
+
+7.Decision Tree Regressor :=
+================================================
+from sklearn.tree import DecisionTreeRegressor
+model_DT = DecisionTreeRegressor(max_depth = 2).fit(train.iloc[:,1:2], train.iloc[:,0])
+prediction_DT = model.predict(test.iloc[:,1:2])
+
+z = mean_absolute_error(test.iloc[:,0], prediction_DT)
+z
+
+8.Random Forest Regressor :=
+========================================================================
+regressor = RandomForestRegressor(n_estimators= 10 ,random_state=0).fit
+regressor
+
+y_pred = regressor.predict(test.iloc[:,1:2])
+
+z= mean_absolute_error(test.iloc[:,0] , y_pred)
+z
+##z= 3.05
+
+9.Predicting value for real -life data :=
+=====================================================================================
+
+os.chdir("C:/Users/lalit mohan/Desktop/data01s2l1-20180201T150153Z-001/data01s2l1/test/")
+dsv5=pd.read_csv("test.csv",encoding="latin1")
+dsv5_2 = dsv5
+for p in clnames:
+    if (dsv5_2[p].dtypes == "object"):
+        cnt = 1
+        for i in range(len(dsv5_2)):
+            dsv5_2[p].loc[i] = cnt
+            cnt = cnt+1
+
+
+new_out = regressor.predict(dsv5_2)
+df1 = pd.Dataframe(new_out)
+
+dfs6 = pd.concat([dsv5_2,df1.reset_index(drop = True)],axis = 1)
+
+
+======================================
+
+Test.loc[:,cnames]
